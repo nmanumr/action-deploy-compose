@@ -20,9 +20,36 @@ tar cjvf /tmp/workspace.tar.bz2 --exclude .git .
 log "Launching ssh agent."
 eval `ssh-agent -s`
 
-ssh-add <(echo "$SSH_PRIVATE_KEY")
+ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
 
-remote_command="set -e ; log() { echo '>> [remote]' \$@ ; } ; cleanup() { log 'Removing workspace...'; rm -rf \"\$HOME/${DOCKER_COMPOSE_PREFIX}_workspace\" ; } ; log 'Creating workspace directory...' ; mkdir \"\$HOME/${DOCKER_COMPOSE_PREFIX}_workspace\" ; trap cleanup EXIT ; log 'Unpacking workspace...' ; tar -C \"\$HOME/${DOCKER_COMPOSE_PREFIX}_workspace\" -xjv ; log 'Launching docker-compose...' ; cd \"\$HOME/${DOCKER_COMPOSE_PREFIX}_workspace\" ; docker-compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
+remote_command="set -e; 
+
+log() { 
+    echo '>> [remote]' \$@ ; 
+}; 
+
+workdir=\"\$HOME/${DOCKER_COMPOSE_PREFIX}_workspace\"
+
+if [ -d \$workdir ] 
+then
+    if [ -f \$workdir/$DOCKER_COMPOSE_FILENAME ] 
+    then
+      log 'Docker Compose Down...'; 
+      docker-compose -f \$workdir/$DOCKER_COMPOSE_FILENAME down
+    fi
+    log 'Removing workspace...'; 
+    rm -rf \$workdir; 
+fi
+
+log 'Creating workspace directory...';
+mkdir \$workdir; 
+
+log 'Unpacking workspace...'; 
+tar -C \$workdir -xjv; 
+
+log 'Launching docker-compose...'; 
+cd \$workdir; 
+docker-compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
 
 echo ">> [local] Connecting to remote host."
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \

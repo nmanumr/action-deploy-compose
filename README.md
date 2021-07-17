@@ -28,7 +28,7 @@ ubuntu based server with docker and docker-compose installed.
 1. Generate key pair, do not use a password here.
 
 ```
-ssh-keygen -t ed25519 deploy_key
+ssh-keygen -t ed25519 -f deploy_key
 ```
 
 2. Create a user which will deploy containers for you on the remote server, do
