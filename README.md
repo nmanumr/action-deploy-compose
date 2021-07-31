@@ -11,14 +11,14 @@ unknown docker-images. It is entirely built from Dockerfile on top of
 
 ## Inputs
 
- * `ssh_private_key` - Private SSH key used for logging into remote system.
+ * `ssh_private_key` - Base64 encoded Private SSH key used for logging into remote system.
    Please, keep your key securely in github secrets.
  * `ssh_host` - Remote host name.
  * `ssh_port` - Remote port for SSH connection. Default is 22.
  * `ssh_user` - Remote user which should have access to docker.
  * `docker_compose_prefix` - Project name passed to compose. Each docker
    container will have this prefix in name.
- * `docker_compose_file` - Path to the docker-compose file in the repository.
+ * `docker_compose_file` - Path to the docker-compose file in the repository. Default is 'docker-compose.yml'
 
 # Usage example
 
@@ -67,14 +67,14 @@ names of the secrets are `EXAMPLE_COM_SSH_PRIVATE_KEY` and
 rm deploy_key
 ```
 
-7. Setup a github-actions workflow (e.g. `.github/workflows/main.yml`):
+7. Setup a github-actions workflow (e.g. `.github/workflows/deploy.yml`):
 
 ```
 name: Deploy
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   deploy:
@@ -83,7 +83,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: alex-ac/github-action-ssh-docker-compose@master
+    - uses: ameerhmzx/github-action-ssh-docker-compose@master
       name: Docker-Compose Remote Deployment
       with:
         ssh_host: example.com
