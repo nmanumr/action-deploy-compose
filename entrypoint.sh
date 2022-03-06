@@ -47,6 +47,8 @@ mkdir \$workdir;
 log 'Unpacking workspace...'; 
 tar -C \$workdir -xj; 
 
+ls -al
+
 log 'Launching docker-compose...'; 
 cd \$workdir; 
 docker-compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
