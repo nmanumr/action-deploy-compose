@@ -47,10 +47,9 @@ mkdir \$workdir;
 log 'Unpacking workspace...'; 
 tar -C \$workdir -xj; 
 
-ls -al
-
 log 'Launching docker-compose...'; 
 cd \$workdir; 
+ls -al
 docker-compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
 
 echo ">> [local] Connecting to remote host."
