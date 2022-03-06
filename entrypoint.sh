@@ -45,7 +45,7 @@ log 'Creating workspace directory...';
 mkdir \$workdir; 
 
 log 'Unpacking workspace...'; 
-tar -C \$workdir -xjv; 
+tar -C \$workdir -xj; 
 
 log 'Launching docker-compose...'; 
 cd \$workdir; 
