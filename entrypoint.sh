@@ -49,7 +49,7 @@ tar -C \$workdir -xj;
 
 log 'Launching docker-compose...'; 
 cd \$workdir; 
-ls -al
+ls -al ./ui
 docker-compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build"
 
 echo ">> [local] Connecting to remote host."
